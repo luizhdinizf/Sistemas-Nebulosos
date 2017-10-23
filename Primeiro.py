@@ -46,7 +46,9 @@ x_serv = np.arange(0, 11, 1)
 x_tip  = np.arange(0, 26, 1)
 
 x = np.arange(-4, 5, 1)
-y = np.square(x)
+y_real = np.square(x)
+
+y = np.arange(0, 17, 1)
 
 
 x_proximo_4 = fuzz.trimf(x, [3, 4, 5])
@@ -60,28 +62,31 @@ x_proximo_menos_3 = fuzz.trimf(x, [-4, -3, -2])
 x_proximo_menos_4 = fuzz.trimf(x, [-5, -4, -3])
 
 fig, (ax0, ax1, ax2) = plt.subplots(nrows=3, figsize=(8, 9))
-ax0.plot(x, x_proximo_4, 'b', linewidth=1.5, label='4')
+ax0.plot(x, x_proximo_4, 'r', linewidth=1.5, label='4')
 ax0.plot(x, x_proximo_3, 'g', linewidth=1.5, label='3')
-ax0.plot(x, x_proximo_2, 'r', linewidth=1.5, label='2')
+ax0.plot(x, x_proximo_2, 'b', linewidth=1.5, label='2')
 ax0.plot(x, x_proximo_1, 'r', linewidth=1.5, label='1')
-ax0.plot(x, x_proximo_0, 'r', linewidth=1.5, label='0')
+ax0.plot(x, x_proximo_0, 'g', linewidth=1.5, label='0')
 ax0.plot(x, x_proximo_menos_1, 'b', linewidth=1.5, label='4')
-ax0.plot(x, x_proximo_menos_2, 'g', linewidth=1.5, label='3')
-ax0.plot(x, x_proximo_menos_3, 'r', linewidth=1.5, label='2')
-ax0.plot(x, x_proximo_menos_4, 'r', linewidth=1.5, label='1')
+ax0.plot(x, x_proximo_menos_2, 'r', linewidth=1.5, label='3')
+ax0.plot(x, x_proximo_menos_3, 'g', linewidth=1.5, label='2')
+ax0.plot(x, x_proximo_menos_4, 'b', linewidth=1.5, label='1')
 ax0.set_title('Entradas')
 ax0.legend()
 
-# Generate fuzzy membership functions
-qual_lo = fuzz.trimf(x_qual, [0, 0, 5])
-qual_md = fuzz.trimf(x_qual, [0, 5, 10])
-qual_hi = fuzz.trimf(x_qual, [5, 10, 10])
-serv_lo = fuzz.trimf(x_serv, [0, 0, 5])
-serv_md = fuzz.trimf(x_serv, [0, 5, 10])
-serv_hi = fuzz.trimf(x_serv, [5, 10, 10])
-tip_lo = fuzz.trimf(x_tip, [0, 0, 13])
-tip_md = fuzz.trimf(x_tip, [0, 13, 25])
-tip_hi = fuzz.trimf(x_tip, [13, 25, 25])
+y_proximo_16 = fuzz.trimf(y, [9, 16, 16])
+y_proximo_9 = fuzz.trimf(y, [4, 9, 16])
+y_proximo_4 = fuzz.trimf(y, [1, 4, 9])
+y_proximo_1 = fuzz.trimf(y, [0, 1, 4])
+y_proximo_0 = fuzz.trimf(y, [0, 0, 1])
+
+ax1.plot(y, y_proximo_16, 'r', linewidth=1.5, label='16')
+ax1.plot(y, y_proximo_9, 'g', linewidth=1.5, label='9')
+ax1.plot(y, y_proximo_4, 'b', linewidth=1.5, label='4')
+ax1.plot(y, y_proximo_1, 'r', linewidth=1.5, label='1')
+ax1.plot(y, y_proximo_0, 'g', linewidth=1.5, label='0')
+
+
 
 # Visualize these universes and membership functions
 #fig, (ax0, ax1, ax2) = plt.subplots(nrows=3, figsize=(8, 9))
