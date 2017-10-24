@@ -91,19 +91,58 @@ ax1.plot(y, y_proximo_0, 'g', linewidth=1.5, label='0')
 
 # Now we take our rules and apply them. Rule 1 concerns bad food OR service.
 # The OR operator means we take the maximum of these two.
-active_rule1 = np.fmax(qual_level_lo, serv_level_lo)
+#active_rule0 = np.fmax(x_proximo_0, x_proximo_menos_4)
+active_rule0 = x_proximo_0
+active_rule1 = np.fmax(x_proximo_1, x_proximo_menos_1)
+active_rule2 = np.fmax(x_proximo_2, x_proximo_menos_2)
+active_rule3 = np.fmax(x_proximo_3, x_proximo_menos_3)
+active_rule4 = np.fmax(x_proximo_4, x_proximo_menos_4)
+
+#
+#ax2.plot(x, active_rule1, 'r', linewidth=1.5, label='16')
+#ax2.plot(x, active_rule2, 'g', linewidth=1.5, label='16')
+#ax2.plot(x, active_rule3, 'b', linewidth=1.5, label='16')
+#ax2.plot(x, active_rule4, 'r', linewidth=1.5, label='16')
+
+x_test = -2.5
+
+x_proximo_novo_4 = fuzz.interp_membership(x, active_rule4,x_test)
+x_proximo_novo_3 = fuzz.interp_membership(x, active_rule3,x_test)
+x_proximo_novo_2 = fuzz.interp_membership(x, active_rule2,x_test)
+x_proximo_novo_1 = fuzz.interp_membership(x, active_rule1,x_test)
+x_proximo_novo_0 = fuzz.interp_membership(x, active_rule0,x_test)
+
+y_proximo_16_novo =  np.fmin(x_proximo_novo_4, y_proximo_16)
+y_proximo_9_novo =  np.fmin(x_proximo_novo_3, y_proximo_9)
+y_proximo_4_novo =  np.fmin(x_proximo_novo_2, y_proximo_4)
+y_proximo_1_novo =  np.fmin(x_proximo_novo_1, y_proximo_1)
+y_proximo_0_novo =  np.fmin(x_proximo_novo_0, y_proximo_0)
+
+
+
+saida_fuzzy = np.fmax(y_proximo_16_novo,y_proximo_9_novo)
+saida_fuzzy = np.fmax(saida_fuzzy,y_proximo_4_novo)
+saida_fuzzy = np.fmax(saida_fuzzy,y_proximo_1_novo)
+saida_fuzzy = np.fmax(saida_fuzzy,y_proximo_0_novo)
+
+
+
+
+#
+ax2.plot(y, saida_fuzzy, 'g', linewidth=1.5, label='16')
+
 
 # Now we apply this by clipping the top off the corresponding output
 # membership function with `np.fmin`
-tip_activation_lo = np.fmin(active_rule1, tip_lo)  # removed entirely to 0
-
-# For rule 2 we connect acceptable service to medium tipping
-tip_activation_md = np.fmin(serv_level_md, tip_md)
-
-# For rule 3 we connect high service OR high food with high tipping
-active_rule3 = np.fmax(qual_level_hi, serv_level_hi)
-tip_activation_hi = np.fmin(active_rule3, tip_hi)
-tip0 = np.zeros_like(x_tip)
+#tip_activation_lo = np.fmin(active_rule1, tip_lo)  # removed entirely to 0
+#
+## For rule 2 we connect acceptable service to medium tipping
+#tip_activation_md = np.fmin(serv_level_md, tip_md)
+#
+## For rule 3 we connect high service OR high food with high tipping
+#active_rule3 = np.fmax(qual_level_hi, serv_level_hi)
+#tip_activation_hi = np.fmin(active_rule3, tip_hi)
+#tip0 = np.zeros_like(x_tip)
 
 # Visualize this
 #fig, ax0 = plt.subplots(figsize=(8, 3))
@@ -146,12 +185,12 @@ The result is a tip of **20.2%**.
 """
 
 # Aggregate all three output membership functions together
-aggregated = np.fmax(tip_activation_lo,
-                     np.fmax(tip_activation_md, tip_activation_hi))
-
-# Calculate defuzzified result
-tip = fuzz.defuzz(x_tip, aggregated, 'centroid')
-tip_activation = fuzz.interp_membership(x_tip, aggregated, tip)  # for plot
+#aggregated = np.fmax(tip_activation_lo,
+#                     np.fmax(tip_activation_md, tip_activation_hi))
+#
+## Calculate defuzzified result
+#tip = fuzz.defuzz(x_tip, aggregated, 'centroid')
+#tip_activation = fuzz.interp_membership(x_tip, aggregated, tip)  # for plot
 
 # Visualize this
 #fig, ax0 = plt.subplots(figsize=(8, 3))
