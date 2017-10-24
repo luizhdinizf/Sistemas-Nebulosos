@@ -41,6 +41,16 @@ import matplotlib.pyplot as plt
 #   * Quality and service on subjective ranges [0, 10]
 #   * Tip has a range of [0, 25] in units of percentage points
 
+def pertinencia(x,pontos):
+    return  fuzz.trimf(x,pontos)
+def agreggation(x1,x2):
+    return np.fmax(x1,x2)
+def s_norma(x1,x2):
+    return np.fmax(x1,x2)
+def t_norma(x1,x2):
+    return np.fmin(x1,x2)
+
+
 x_qual = np.arange(0, 11, 1)
 x_serv = np.arange(0, 11, 1)
 x_tip  = np.arange(0, 26, 1)
@@ -51,17 +61,18 @@ y_real = np.square(x)
 y = np.arange(0, 17, 1)
 
 
-x_proximo_4 = fuzz.trimf(x, [3, 4, 5])
-x_proximo_3 = fuzz.trimf(x, [2, 3, 4])
-x_proximo_2 = fuzz.trimf(x, [1, 2, 3])
-x_proximo_1 = fuzz.trimf(x, [0, 1, 2])
-x_proximo_0 = fuzz.trimf(x, [-1, 0, 1])
-x_proximo_menos_1 = fuzz.trimf(x, [-2, -1, 0])
-x_proximo_menos_2 = fuzz.trimf(x, [-3, -2, -1])
-x_proximo_menos_3 = fuzz.trimf(x, [-4, -3, -2])
-x_proximo_menos_4 = fuzz.trimf(x, [-5, -4, -3])
+x_proximo_4 = pertinencia(x, [3, 4, 5])
+x_proximo_3 = pertinencia(x, [2, 3, 4])
+x_proximo_2 = pertinencia(x, [1, 2, 3])
+x_proximo_1 = pertinencia(x, [0, 1, 2])
+x_proximo_0 = pertinencia(x, [-1, 0, 1])
+x_proximo_menos_1 = pertinencia(x, [-2, -1, 0])
+x_proximo_menos_2 = pertinencia(x, [-3, -2, -1])
+x_proximo_menos_3 = pertinencia(x, [-4, -3, -2])
+x_proximo_menos_4 = pertinencia(x, [-5, -4, -3])
 
 fig, (ax0, ax1, ax2) = plt.subplots(nrows=3, figsize=(8, 9))
+
 ax0.plot(x, x_proximo_4, 'r', linewidth=1.5, label='4')
 ax0.plot(x, x_proximo_3, 'g', linewidth=1.5, label='3')
 ax0.plot(x, x_proximo_2, 'b', linewidth=1.5, label='2')
@@ -74,11 +85,11 @@ ax0.plot(x, x_proximo_menos_4, 'b', linewidth=1.5, label='1')
 ax0.set_title('Entradas')
 ax0.legend()
 
-y_proximo_16 = fuzz.trimf(y, [9, 16, 16])
-y_proximo_9 = fuzz.trimf(y, [4, 9, 16])
-y_proximo_4 = fuzz.trimf(y, [1, 4, 9])
-y_proximo_1 = fuzz.trimf(y, [0, 1, 4])
-y_proximo_0 = fuzz.trimf(y, [0, 0, 1])
+y_proximo_16 = pertinencia(y, [9, 16, 16])
+y_proximo_9 = pertinencia(y, [4, 9, 16])
+y_proximo_4 = pertinencia(y, [1, 4, 9])
+y_proximo_1 = pertinencia(y, [0, 1, 4])
+y_proximo_0 = pertinencia(y, [0, 0, 1])
 
 ax1.plot(y, y_proximo_16, 'r', linewidth=1.5, label='16')
 ax1.plot(y, y_proximo_9, 'g', linewidth=1.5, label='9')
@@ -92,11 +103,12 @@ ax1.plot(y, y_proximo_0, 'g', linewidth=1.5, label='0')
 # Now we take our rules and apply them. Rule 1 concerns bad food OR service.
 # The OR operator means we take the maximum of these two.
 #active_rule0 = np.fmax(x_proximo_0, x_proximo_menos_4)
+
 active_rule0 = x_proximo_0
-active_rule1 = np.fmax(x_proximo_1, x_proximo_menos_1)
-active_rule2 = np.fmax(x_proximo_2, x_proximo_menos_2)
-active_rule3 = np.fmax(x_proximo_3, x_proximo_menos_3)
-active_rule4 = np.fmax(x_proximo_4, x_proximo_menos_4)
+active_rule1 = s_norma(x_proximo_1, x_proximo_menos_1)
+active_rule2 = s_norma(x_proximo_2, x_proximo_menos_2)
+active_rule3 = s_norma(x_proximo_3, x_proximo_menos_3)
+active_rule4 = s_norma(x_proximo_4, x_proximo_menos_4)
 
 #
 #ax2.plot(x, active_rule1, 'r', linewidth=1.5, label='16')
@@ -104,34 +116,36 @@ active_rule4 = np.fmax(x_proximo_4, x_proximo_menos_4)
 #ax2.plot(x, active_rule3, 'b', linewidth=1.5, label='16')
 #ax2.plot(x, active_rule4, 'r', linewidth=1.5, label='16')
 
-x_test = -2.5
+x_simu = np.arange(-4, 4, 0.01)
+y_simu = []
 
-x_proximo_novo_4 = fuzz.interp_membership(x, active_rule4,x_test)
-x_proximo_novo_3 = fuzz.interp_membership(x, active_rule3,x_test)
-x_proximo_novo_2 = fuzz.interp_membership(x, active_rule2,x_test)
-x_proximo_novo_1 = fuzz.interp_membership(x, active_rule1,x_test)
-x_proximo_novo_0 = fuzz.interp_membership(x, active_rule0,x_test)
-
-y_proximo_16_novo =  np.fmin(x_proximo_novo_4, y_proximo_16)
-y_proximo_9_novo =  np.fmin(x_proximo_novo_3, y_proximo_9)
-y_proximo_4_novo =  np.fmin(x_proximo_novo_2, y_proximo_4)
-y_proximo_1_novo =  np.fmin(x_proximo_novo_1, y_proximo_1)
-y_proximo_0_novo =  np.fmin(x_proximo_novo_0, y_proximo_0)
-
-
-
-saida_fuzzy = np.fmax(y_proximo_16_novo,y_proximo_9_novo)
-saida_fuzzy = np.fmax(saida_fuzzy,y_proximo_4_novo)
-saida_fuzzy = np.fmax(saida_fuzzy,y_proximo_1_novo)
-saida_fuzzy = np.fmax(saida_fuzzy,y_proximo_0_novo)
-
-
-
-
-#
+for i in x_simu:
+    x_test = i
+    
+    x_proximo_novo_4 = fuzz.interp_membership(x, active_rule4,x_test)
+    x_proximo_novo_3 = fuzz.interp_membership(x, active_rule3,x_test)
+    x_proximo_novo_2 = fuzz.interp_membership(x, active_rule2,x_test)
+    x_proximo_novo_1 = fuzz.interp_membership(x, active_rule1,x_test)
+    x_proximo_novo_0 = fuzz.interp_membership(x, active_rule0,x_test)
+    
+    y_proximo_16_novo =  t_norma(x_proximo_novo_4, y_proximo_16)
+    y_proximo_9_novo =  t_norma(x_proximo_novo_3, y_proximo_9)
+    y_proximo_4_novo =  t_norma(x_proximo_novo_2, y_proximo_4)
+    y_proximo_1_novo =  t_norma(x_proximo_novo_1, y_proximo_1)
+    y_proximo_0_novo =  t_norma(x_proximo_novo_0, y_proximo_0)
+    
+    
+    
+    saida_fuzzy = agreggation(y_proximo_16_novo,y_proximo_9_novo)
+    saida_fuzzy = agreggation(saida_fuzzy,y_proximo_4_novo)
+    saida_fuzzy = agreggation(saida_fuzzy,y_proximo_1_novo)
+    saida_fuzzy = agreggation(saida_fuzzy,y_proximo_0_novo)
+    
+    tip = fuzz.defuzz(y, saida_fuzzy, 'centroid')
+    print(tip)
+    y_simu.append(tip)
 ax2.plot(y, saida_fuzzy, 'g', linewidth=1.5, label='16')
-
-
+ax2.plot(x_simu, y_simu, 'b', linewidth=1.5, label='16')
 # Now we apply this by clipping the top off the corresponding output
 # membership function with `np.fmin`
 #tip_activation_lo = np.fmin(active_rule1, tip_lo)  # removed entirely to 0
