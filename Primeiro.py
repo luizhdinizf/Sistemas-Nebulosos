@@ -133,6 +133,11 @@ for i in x_simu:
 #    ax1.plot(y, saida_fuzzy, 'g', linewidth=1.5, label='16')
 
 rms = erro(y_real,y_simu)
+mensagem_erro = "Erro rms = " + "{:7.4f}".format(rms)
 
-ax0.plot(x, y_real, 'b', linewidth=1.5, label='16')
-ax0.plot(x_simu, y_simu, 'r', linewidth=1.5, label='16')
+ax0.plot(x, y_real, 'b', linewidth=1.5, label='Real')
+ax0.plot(x_simu, y_simu, 'r', linewidth=1.5, label="Estimado")
+ax0.set_title("Funções de Saída")
+ax0.text(3, 8, mensagem_erro, style='italic',
+        bbox={'facecolor':'red', 'alpha':0.5, 'pad':10})
+ax2.legend()
