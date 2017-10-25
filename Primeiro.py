@@ -28,13 +28,10 @@ def s_norma(x1,x2):
 def t_norma(x1,x2):
     return t_norma_min(x1,x2)
 def pertinencia(x,pontos):
-    centro = pontos[1]
-    sigma = pontos[2]-pontos[0]
-#    return fuzz.membership.gaussmf(x,centro,sigma)
     return  fuzz.trimf(x,pontos)
 def pertinencia_gauss(x,pontos):
     centro = pontos[1]
-    sigma = pontos[2]-pontos[0]
+    sigma = pontos[2]-pontos[1]
     return fuzz.membership.gaussmf(x,centro,sigma)
 
 
